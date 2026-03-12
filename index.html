@@ -69,24 +69,23 @@
     }
     .hero .wrap { position: relative; z-index: 1; padding: 0 1.5rem; max-width: 920px; margin: 0 auto; }
     .hero-top {
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 1.75rem;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
     }
     .hero-logo {
-      height: 40px;
+      height: 28px;
       width: auto;
       display: block;
-      flex-shrink: 0;
+      justify-self: start;
+      align-self: start;
       object-fit: contain;
-      vertical-align: bottom;
     }
     .hero-logo[src=""], .hero-logo:not([src]) { display: none; }
     .hero-text {
-      display: flex;
-      align-items: flex-end;
+      grid-column: 2;
+      text-align: center;
     }
     .hero h1 {
       font-size: clamp(1.35rem, 3.5vw, 1.85rem);
@@ -1272,7 +1271,7 @@
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 11 } } },
         scales: {
           x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
           y: { grid: { display: false }, ticks: { color: '#201547' } }
@@ -1337,23 +1336,23 @@
       new Chart(document.getElementById('chartAIInterest'), {
         type: 'bar',
         data: { labels: aiIntLabels, datasets: [{ label: 'Responses', data: aiIntData, backgroundColor: chartColors }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } }, x: { grid: { display: false }, ticks: { color: '#201547' } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 11 } } }, scales: { y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } }, x: { grid: { display: false }, ticks: { color: '#201547' } } } }
       });
       createDoughnut('chartAIExpectation', aiExpKeys, aiExpKeys.map(function(k) { return aiExp[k]; }), chartColors);
       if (req.length) new Chart(document.getElementById('chartAIRequirements'), {
         type: 'bar',
         data: { labels: req.map(function(r) { return wrapLabel(r.label, 42); }), datasets: [{ label: 'Selected', data: req.map(function(r) { return r.count; }), backgroundColor: '#4C4084' }] },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } }, y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 }, autoSkip: false } } } }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 11 } } }, scales: { x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } }, y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 }, autoSkip: false } } } }
       });
       if (ease.length) new Chart(document.getElementById('chartEase'), {
         type: 'bar',
         data: { labels: ease.map(function(e) { return e.area; }), datasets: [{ label: '% Easy + Very Easy', data: ease.map(function(e) { return e.pct_easy; }), backgroundColor: '#4C4084' }] },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { min: 0, max: 100, grid: { color: gridColor }, ticks: { color: tickColor, callback: function(v) { return v + '%'; } } }, y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 } } } } }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 11 } } }, scales: { x: { min: 0, max: 100, grid: { color: gridColor }, ticks: { color: tickColor, callback: function(v) { return v + '%'; } } }, y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 } } } } }
       });
       if (bar.length) new Chart(document.getElementById('chartBarriers'), {
         type: 'bar',
         data: { labels: bar.map(function(b) { return b.label; }), datasets: [{ label: 'Mentions', data: bar.map(function(b) { return b.count; }), backgroundColor: '#C5299B' }] },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } }, y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 } } } } }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 11 } } }, scales: { x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } }, y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 } } } } }
       });
       createDoughnut('chartRole', roleKeys, roleKeys.map(function(k) { return role[k]; }), chartColors);
       createDoughnut('chartIndustry', indLabels, indCounts, chartColors);
@@ -1361,7 +1360,7 @@
       if (aiPriority.length) new Chart(document.getElementById('chartAIPriority'), {
         type: 'bar',
         data: { labels: aiPriority.map(function(p) { return wrapLabel(p.label, 42); }), datasets: [{ label: 'Responses', data: aiPriority.map(function(p) { return p.count; }), backgroundColor: chartColors }] },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } }, y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 }, autoSkip: false } } } }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 11 } } }, scales: { x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } }, y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 }, autoSkip: false } } } }
       });
     } else {
       renderBarChart('chartMaturity', matKeys.map(shortMaturity), matKeys.map(function(k) { return mat[k]; }), chartColors);
