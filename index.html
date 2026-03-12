@@ -550,8 +550,6 @@
     </footer>
   </div>
 
-  <div id="chart-error" style="display:none; margin:1rem 1.5rem; padding:1rem; background:#fff3cd; border:1px solid #ffc107; border-radius:8px; color:#856404;"></div>
-
   <script type="application/json" id="survey-data">
 {
   "n": 358,
@@ -1208,14 +1206,7 @@
   </script>
   <script>
     (function() {
-      function showError(msg) {
-        var el = document.getElementById('chart-error');
-        if (el) { el.textContent = msg; el.style.display = 'block'; }
-      }
-      if (typeof Chart === 'undefined') {
-        showError('Charts: Chart.js did not load. Check your connection or try again later.');
-        return;
-      }
+      if (typeof Chart === 'undefined') return;
       const hasDataLabels = typeof ChartDataLabels !== 'undefined';
       if (hasDataLabels) Chart.register(ChartDataLabels);
       var origin = window.location.origin;
@@ -1257,16 +1248,16 @@
         }
         return loadData();
       }
+      function runCharts() {
       getData()
         .then(d => {
-          if (!d || typeof d.n === 'undefined') {
-            showError('Charts: Invalid data format.');
-            return;
-          }
+          try {
+          if (!d || typeof d.n === 'undefined') return;
           const n = d.n;
-          document.getElementById('stat-n').textContent = n;
-          document.getElementById('n-participants').textContent = n;
-          document.getElementById('n-industry').textContent = n;
+          var statN = document.getElementById('stat-n');
+          if (statN) statN.textContent = n;
+          var np = document.getElementById('n-participants'); if (np) np.textContent = n;
+          var ni = document.getElementById('n-industry'); if (ni) ni.textContent = n;
 
           function createBarChart(id, labels, counts, colors) {
             var el = document.getElementById(id);
@@ -1462,8 +1453,15 @@
               return `<blockquote>“${esc(text)}”${att ? `<div class="quote-attribution">${esc(att)}</div>` : ''}</blockquote>`;
             }).join('');
           }
+          } catch (err) {}
         })
-        .catch(e => { console.error('Load data failed', e); showError('Charts: Could not load data. (' + (e.message || 'network error') + ')'); });
+        .catch(function() {});
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { setTimeout(runCharts, 150); });
+      } else {
+        setTimeout(runCharts, 150);
+      }
     })();
   </script>
 </body>
