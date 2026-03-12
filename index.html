@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Governance Insights 2026 Survey — OnBoard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <style>
+    /* OnBoard Brand: primary #201547 deep purple, #4C4084 royal purple, #C5299B magenta, #F2F2F2 gray */
+    /* Secondary/digital: #3B2CEA, #6359DE, #AC9EFF, #68D4FC, #FF8024, #FB00AE */
+    :root {
+      --ob-deep: #201547;
+      --ob-royal: #4C4084;
+      --ob-magenta: #C5299B;
+      --ob-gray: #F2F2F2;
+      --ob-white: #ffffff;
+      --bg-page: #F5F3F9;
+      --bg-content: #ffffff;
+      --text: #201547;
+      --text-muted: #4C4084;
+      --border: #e0dce8;
+      --chart1: #4C4084;
+      --chart2: #3B2CEA;
+      --chart3: #6359DE;
+      --chart4: #C5299B;
+      --chart5: #FF8024;
+      --chart6: #68D4FC;
+      --chart7: #AC9EFF;
+      --chart8: #FB00AE;
+      --insight-bg: rgba(76, 64, 132, 0.08);
+      --insight-border: #4C4084;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: var(--bg-page);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 1rem;
+      font-weight: 500;
+      overflow-x: hidden;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 0 1.5rem; }
+    .hero {
+      background: var(--ob-deep);
+      color: #fff;
+      padding: 1.75rem 1.5rem 1.5rem;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      width: 100vw;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -15%;
+      width: 85%;
+      height: 140%;
+      background: radial-gradient(ellipse 70% 60% at 75% 25%, rgba(124, 100, 180, 0.35), rgba(100, 80, 160, 0.12) 50%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero .wrap { position: relative; z-index: 1; padding: 0 1.5rem; max-width: 920px; margin: 0 auto; }
+    .hero-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .hero-logo {
+      height: 40px;
+      width: auto;
+      display: block;
+      flex-shrink: 0;
+      object-fit: contain;
+      vertical-align: bottom;
+    }
+    .hero-logo[src=""], .hero-logo:not([src]) { display: none; }
+    .hero-text {
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero h1 {
+      font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: -0.02em;
+      color: #fff;
+      line-height: 1.3;
+      vertical-align: middle;
+    }
+    .hero-nav { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .hero-nav-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem 0.75rem; }
+    .hero-nav a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 0.4rem 0.65rem;
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .hero-nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    .main-content { background: var(--bg-content); margin: 0 -1.5rem 0; padding: 1rem 1.5rem 2rem; border-radius: 12px 12px 0 0; box-shadow: 0 -2px 12px rgba(32, 21, 71, 0.08); }
+    .main-content > section:first-child { padding-top: 0.5rem; }
+    header { padding: 0 0 1.5rem; border-bottom: 2px solid var(--border); }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      color: var(--ob-deep);
+    }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.75rem;
+      margin-top: 1rem;
+    }
+    nav a {
+      color: var(--ob-royal);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    nav a:hover { color: var(--ob-magenta); text-decoration: underline; }
+    section {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type { border-bottom: none; }
+    h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.85rem; color: var(--ob-deep); }
+    p { margin: 0 0 0.75rem; color: var(--text); }
+    .muted { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .n-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .stat-card {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .stat-card .num { font-size: 1.6rem; font-weight: 700; color: var(--ob-royal); }
+    .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .chart-container { position: relative; height: 280px; margin: 1.75rem 0 2rem; }
+    .chart-container.sm { height: 240px; margin: 1.75rem 0 1.75rem; }
+    .chart-container-wide { height: 320px; }
+    .insight-box {
+      background: rgba(76, 64, 132, 0.06);
+      border-left: 4px solid var(--insight-border);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0 1.25rem;
+      border-radius: 0 8px 8px 0;
+    }
+    .insight-box strong { color: var(--ob-deep); }
+    .distinction-card {
+      background: rgba(76, 64, 132, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .distinction-card h4 { font-size: 1rem; margin: 0 0 0.75rem; color: var(--ob-deep); }
+    .distinction-card ul { margin: 0.5rem 0 0.75rem; padding-left: 1.25rem; }
+    .distinction-card li { margin: 0.4rem 0; }
+    .distinction-card .takeaway { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border); font-size: 0.9rem; color: var(--ob-royal); font-weight: 500; }
+    .maturity-definitions { background: var(--bg-page); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 0.9rem; }
+    .maturity-definitions ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+    .maturity-definitions li { margin: 0.35rem 0; }
+    .finding-q { font-style: italic; color: var(--text-muted); margin-bottom: 1.5rem; margin-top: 0.25rem; }
+    ul { margin: 0.5rem 0 1rem; padding-left: 1.25rem; }
+    li { margin: 0.35rem 0; }
+    .quote-group h4 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ob-royal); margin: 1rem 0 0.5rem; }
+    blockquote {
+      margin: 0.5rem 0;
+      padding: 0.75rem 1rem;
+      background: var(--bg-page);
+      border-radius: 8px;
+      border-left: 3px solid var(--ob-royal);
+      font-style: italic;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .quote-attribution { font-style: normal; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .role-counts { font-size: 0.9rem; color: var(--text-muted); margin: 0.5rem 0 1rem; }
+    .now-next-later { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    @media (max-width: 640px) { .now-next-later { grid-template-columns: 1fr; } }
+    .nnl { padding: 1.25rem; border-radius: 10px; border: 1px solid var(--border); }
+    .nnl.now { background: rgba(76, 64, 132, 0.06); border-color: var(--chart1); }
+    .nnl.next { background: rgba(197, 41, 155, 0.06); border-color: var(--chart4); }
+    .nnl.later { background: rgba(255, 128, 36, 0.08); border-color: var(--chart5); }
+    .nnl h4 { margin: 0 0 0.5rem; font-size: 1rem; font-weight: 700; }
+    .nnl.now h4 { color: var(--chart1); }
+    .nnl.next h4 { color: var(--chart4); }
+    .nnl.later h4 { color: var(--chart5); }
+    .gtm-nuggets { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0; }
+    .gtm-nugget {
+      background: var(--bg-page);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+    }
+    .gtm-nugget .num { color: var(--ob-royal); font-weight: 700; }
+    /* Appendix cards */
+    .appendix-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .appendix-card {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .appendix-card h4 { font-size: 0.95rem; margin: 0 0 0.5rem; color: var(--ob-deep); }
+    .appendix-card .n { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .appendix-card ul { margin: 0.5rem 0 0; padding-left: 1rem; font-size: 0.9rem; }
+    footer {
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="wrap">
+        <div class="hero-top">
+          <img src="OB_Logo_white_words.png" alt="OnBoard" class="hero-logo" />
+          <div class="hero-text">
+            <h1>Governance Insights 2026 Survey Results</h1>
+          </div>
+        </div>
+        <nav class="hero-nav">
+          <div class="hero-nav-row">
+            <a href="#background">Research Background</a>
+            <a href="#participants">Participant Overview</a>
+            <a href="#summary">Executive Summary</a>
+            <a href="#findings">Key Findings</a>
+            <a href="#distinctions">Key Distinctions</a>
+          </div>
+          <div class="hero-nav-row">
+            <a href="#quotes">In Their Words</a>
+            <a href="#direction">Product Direction</a>
+            <a href="#gtm">GTM Nuggets</a>
+            <a href="#appendix">Appendix</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <div class="main-content">
+    <section id="background">
+      <h2>Research Background</h2>
+      <p><strong>Purpose</strong></p>
+      <ul>
+        <li>Support product and GTM with packaged insights on how boards measure and use governance insights today.</li>
+        <li>Understand AI interest, expectations, and trust requirements for governance insights.</li>
+      </ul>
+      <p><strong>Distribution</strong></p>
+      <ul>
+        <li>Survey distributed to board leaders (directors, CEOs, executive directors, corporate secretaries, board administrators).</li>
+        <li>Focus on roles, industries, and current vs. future maturity.</li>
+      </ul>
+      <p><strong>Response</strong></p>
+      <ul>
+        <li><strong id="stat-n">358</strong> surveys completed with key questions answered.</li>
+        <li>How participants access insights today is highly varied (board portals, spreadsheets, email, informal methods)—no single dominant tool.</li>
+        <li>Analysis includes cross-tabs by role and industry; segment callouts noted in key findings.</li>
+      </ul>
+      <p><strong>Methodology &amp; limitations</strong></p>
+      <ul>
+        <li>Self-reported responses; single wave. No prior wave for year-over-year comparison.</li>
+        <li>Participants who completed key questions (maturity, AI interest, or related) are included in N=358.</li>
+        <li>For best experience and charts, view in a modern browser; use Print to PDF if a static copy is needed.</li>
+      </ul>
+    </section>
+
+    <section id="participants">
+      <h2>Participant Overview</h2>
+      <p class="n-label">Which best describes your role in the boardroom? | N=<span id="n-participants">358</span></p>
+      <div class="chart-container sm">
+        <canvas id="chartRole"></canvas>
+      </div>
+      <p class="role-counts" id="role-counts"><!-- Filled from JSON: exact counts per role --></p>
+      <p class="n-label">What is your organization’s primary industry? | N=<span id="n-industry">358</span></p>
+      <div class="chart-container sm">
+        <canvas id="chartIndustry"></canvas>
+      </div>
+    </section>
+
+    <section id="summary">
+      <h2>Executive Summary</h2>
+      <div class="insight-box" style="margin-top: 0;">
+        <strong>Key points</strong>
+        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem;">
+          <li><strong>78%</strong> expect to be in Developing or Advanced maturity in 12 months.</li>
+          <li><strong>72%</strong> are somewhat to very interested in AI-generated governance insights; <strong>8%</strong> already using AI today.</li>
+          <li>Top barrier: <strong>"Exists but fragmented/manual" (55%)</strong>—then "No owner/follow-through" and "Not actionable."</li>
+          <li>Top AI requirements: <strong>data privacy, human review before sharing, transparent audit trails.</strong></li>
+        </ul>
+      </div>
+      <p>Board effectiveness and governance insights maturity are mixed; a majority expect to be in “Developing” or “Advanced” in 12 months. AI interest is strong, with trust and controls as prerequisites.</p>
+      <ul>
+        <li>Board insights maturity is spread across Developing (33%), Basic (27%), and Advanced (25%). 78% expect to be in Developing or Advanced in 12 months.</li>
+        <li>72% of participants are somewhat to very interested (3–5) in using AI-generated governance insights; 8% are already using AI today.</li>
+        <li>Top barrier to insights: “Exists but fragmented/manual” (55% of respondents selected)—followed by “No owner/follow-through” and “Not actionable.”</li>
+        <li>Strong data privacy, human review before sharing, and transparent audit trails are the top requirements for AI-generated insights.</li>
+        <li>Ease of accessing insights varies by role: Corporate Secretary/GC report highest ease; Executive Directors report lowest on director engagement.</li>
+      </ul>
+    </section>
+
+    <section id="findings">
+      <h2>Key Findings</h2>
+
+      <h3>How Boards Measure and Use Governance Insights Today</h3>
+      <p class="finding-q">Which statement best describes how your board currently measures and uses governance insights? | N=358</p>
+      <div class="maturity-definitions">
+        <strong>What these terms mean:</strong>
+        <ul>
+          <li><strong>Advanced</strong> — Structured reporting across key governance areas, reviewed on a regular cadence; it informs improvements and follow-through.</li>
+          <li><strong>Developing</strong> — Multiple areas reviewed periodically with some trends visible; insights aren’t always timely, trusted, or acted on.</li>
+          <li><strong>Basic</strong> — A few metrics tracked (e.g., attendance), but not reviewed consistently or tied to improvement actions.</li>
+          <li><strong>Informal</strong> — Reliance on informal feedback and individual memory; little or no consistent reporting.</li>
+          <li><strong>Not sure / N/A</strong> — Respondent was unsure or the question was not applicable.</li>
+        </ul>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartMaturity"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Insight:</strong> One-third are “Developing” (periodic reviews, insights not always timely or acted on). Product can lean into structured reporting and follow-through to meet this segment.
+      </div>
+
+      <h3>Where Boards Expect to Be in 12 Months</h3>
+      <p class="finding-q">Looking ahead about 12 months, where do you expect your board to be in its approach to measuring and using governance insights? | N=358</p>
+      <div class="chart-container">
+        <canvas id="chartFuture"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Insight:</strong> 78% expect “Developing” or “Advanced” in 12 months (vs. 60% today). Advanced-maturity boards are more likely to already use or plan for AI—segment by maturity for GTM.
+      </div>
+
+      <h3>Interest in AI-Generated Governance Insights</h3>
+      <p class="finding-q">How interested would you be in using AI-generated governance insights to support board oversight and decision-making? (1 = Not interested, 5 = Very interested) | N=358</p>
+      <div class="chart-container">
+        <canvas id="chartAIInterest"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Segment callout:</strong> Corporate Secretary/GC and Board Director/Member show the highest share at 4–5. Financial services and Corporate show relatively higher “very interested” (5)—AI messaging may resonate there first.
+      </div>
+
+      <h3>Expectation for AI Use in the Next 12 Months</h3>
+      <p class="finding-q">Within the next 12 months, what level of expectation is there that your board or governance team will use AI to generate governance insights? | N=358</p>
+      <div class="chart-container">
+        <canvas id="chartAIExpectation"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Maturity of AI insights:</strong> Only 8% “Already using AI” today; 33% have moderate expectation. Meeting trust requirements (privacy, audit trail, human review) can capture the “moderate expectation” segment.
+      </div>
+
+      <h3>What Boards Want From AI (Trust &amp; Controls)</h3>
+      <p class="finding-q">Which capabilities are important for AI-generated governance insights? …participants allowed to choose more than one | N=358</p>
+      <div class="chart-container chart-container-wide">
+        <canvas id="chartAIRequirements"></canvas>
+      </div>
+
+      <h3>If AI Could Help, What Would You Want It to Do First?</h3>
+      <p class="finding-q">Please rank the following options from most urgent to least. (Chart shows first/selected priority per respondent.) | N=358</p>
+      <div class="chart-container chart-container-wide">
+        <canvas id="chartAIPriority"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Insight:</strong> Top priorities are board skills/succession (60), quality & timeliness of materials (58), and progress on strategy (55). Follow-through and early warning on risks also rank high—aligns with barriers and value themes.
+      </div>
+
+      <h3>Ease of Accessing Insights by Governance Area</h3>
+      <p class="finding-q">How easy is it to access insights in each of these areas? (% Easy + Very Easy) | N=358</p>
+      <div class="chart-container sm">
+        <canvas id="chartEase"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Insight:</strong> Director engagement, composition, and strategy are the hardest areas (38–40% easy); meetings run and materials are easiest (56–61%). Product can prioritize visibility into engagement and composition for boards that struggle there.
+      </div>
+
+      <h3>Barriers to Governance Insights</h3>
+      <p class="finding-q">What gets in the way of boards having the insights they need? …participants allowed to choose more than one | N=358</p>
+      <div class="chart-container">
+        <canvas id="chartBarriers"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Product angle:</strong> “Fragmented/manual” and “No owner/follow-through” point to workflow and ownership. “Not actionable” and “Hard to locate” point to clarity and discoverability. AI and tooling can target consolidation, clear ownership, and actionable next steps.
+      </div>
+    </section>
+
+    <section id="distinctions">
+      <h2>Key Distinctions: Insights That Go Beyond the Charts</h2>
+      <p class="muted" style="margin-bottom: 1.5rem;">Cross-question analysis and actionable takeaways—so product and GTM can act on them.</p>
+
+      <div class="distinction-card">
+        <h4>Maturity Predicts AI Adoption</h4>
+        <ul>
+          <li>Advanced-maturity boards: <strong>21%</strong> already using AI today (vs. 5% Informal, 0% Not sure).</li>
+          <li>High expectation (planning/piloting): concentrated in Advanced (9%) and Developing (8%).</li>
+        </ul>
+        <p class="takeaway">Takeaway: Segment by maturity—lead with AI for Advanced/Developing; build trust and basics first for Basic/Informal.</p>
+      </div>
+      <div class="distinction-card">
+        <h4>Role Shapes Both Interest and Visibility</h4>
+        <ul>
+          <li>Corporate Secretary/GC: highest ease—61% Easy+Very Easy on materials, 45% on oversight/risk.</li>
+          <li>Executive Directors: lowest on director engagement (28%).</li>
+          <li>Secretary/GC and Board Director/Member: highest share at AI interest 4–5.</li>
+        </ul>
+        <p class="takeaway">Takeaway: Position “ease of access” for Secretaries; “engagement visibility” and AI for EDs and Directors.</p>
+      </div>
+      <div class="distinction-card">
+        <h4>Industry Shifts AI Interest</h4>
+        <ul>
+          <li>Financial services and Corporate: higher proportion “very interested” (5) than Nonprofit and Education.</li>
+          <li>Nonprofit: largest segment (49%), spread across the interest scale.</li>
+        </ul>
+        <p class="takeaway">Takeaway: Prioritize FinServ and Corporate for AI-first messaging; use trust and workflow for Nonprofit.</p>
+      </div>
+      <div class="distinction-card">
+        <h4>One Barrier Dominates—Build There First</h4>
+        <ul>
+          <li><strong>55%</strong> selected “Exists but fragmented/manual” (195 mentions).</li>
+          <li>No other barrier exceeds 32%.</li>
+        </ul>
+        <p class="takeaway">Takeaway: Lead with consolidation, less manual effort, and “one place” for governance insights.</p>
+      </div>
+      <div class="distinction-card">
+        <h4>The “Moderate Expectation” Segment Is the Near-Term Opportunity</h4>
+        <ul>
+          <li><strong>33%</strong> have moderate expectation (likely within 12 months, no active plan yet).</li>
+          <li>vs. 8% already using and 7% high expectation.</li>
+        </ul>
+        <p class="takeaway">Takeaway: Capture this segment with trust (privacy, audit trail, human review) and clear use cases (follow-through, engagement, materials).</p>
+      </div>
+    </section>
+
+    <section id="quotes">
+      <h2>Where Improved Governance Insights Would Create the Most Value</h2>
+      <p class="muted">In your own words, where do you think improved governance insights would create the most value? Sample responses with role and industry.</p>
+      <div id="quotes-container">
+        <!-- Filled from survey_summary.json value_quotes (quote, role, industry) -->
+        <p class="muted">Loading…</p>
+      </div>
+    </section>
+
+    <section id="direction">
+      <h2>Product Direction: Now / Next / Later</h2>
+      <div class="now-next-later">
+        <div class="nnl now">
+          <h4>Now</h4>
+          <p>Double down on follow-through and ownership: action tracking, due dates, status. Address “fragmented/manual” and “no owner/follow-through” with clear workflows and visibility.</p>
+        </div>
+        <div class="nnl next">
+          <h4>Next</h4>
+          <p>AI-generated insights with trust first: strong privacy, human review, transparent audit trail, clear citations. Prioritize use cases: director engagement, follow-through, quality of materials.</p>
+        </div>
+        <div class="nnl later">
+          <h4>Later</h4>
+          <p>Structured reporting across governance areas (strategy, risk, composition) and early warning on risks/compliance. Deeper persona-specific views (e.g., engagement for EDs, materials for Secretaries).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="gtm">
+      <h2>GTM Nuggets &amp; Stats</h2>
+      <p>Clear stats for insight-led GTM when the product team is ready.</p>
+      <div class="gtm-nuggets">
+        <div class="gtm-nugget"><span class="num">72%</span> of board leaders are somewhat to very interested in AI-generated governance insights.</div>
+        <div class="gtm-nugget"><span class="num">8%</span> are already using AI for governance insights today.</div>
+        <div class="gtm-nugget"><span class="num">60%</span> say strong data privacy controls are required; 59% want human review before sharing.</div>
+        <div class="gtm-nugget"><span class="num">55%</span> cite insights as “fragmented or manual”—boards want consolidation.</div>
+        <div class="gtm-nugget"><span class="num">78%</span> expect to be in Developing or Advanced maturity in 12 months.</div>
+      </div>
+    </section>
+
+    <section id="appendix">
+      <h2>Appendix</h2>
+      <h3>Cross-Tab: Results Stratified by Board Room Role</h3>
+      <p class="muted">Key differences in responses by role. N varies by question.</p>
+      <div class="appendix-grid">
+        <div class="appendix-card">
+          <h4>Board Director/Member</h4>
+          <div class="n">Largest segment</div>
+          <ul>
+            <li>Highest share at AI interest 4–5 (very interested).</li>
+            <li>Ease: 53% Easy+Very Easy on materials; 40% on engagement.</li>
+          </ul>
+        </div>
+        <div class="appendix-card">
+          <h4>Board Administrator</h4>
+          <div class="n">~15% of respondents</div>
+          <ul>
+            <li>55% Easy+Very Easy on materials; 33% on engagement.</li>
+          </ul>
+        </div>
+        <div class="appendix-card">
+          <h4>Corporate Secretary/General Counsel</h4>
+          <div class="n">~12% of respondents</div>
+          <ul>
+            <li>Highest ease: 61% materials, 45% oversight/risk, 45% engagement.</li>
+          </ul>
+        </div>
+        <div class="appendix-card">
+          <h4>Executive Director</h4>
+          <div class="n">~9% of respondents</div>
+          <ul>
+            <li>Lowest ease on director engagement (28%).</li>
+            <li>62% Easy+Very Easy on materials.</li>
+          </ul>
+        </div>
+        <div class="appendix-card">
+          <h4>CEO/President</h4>
+          <div class="n">~9% of respondents</div>
+          <ul>
+            <li>58% Easy+Very Easy on materials; 35% on engagement.</li>
+          </ul>
+        </div>
+      </div>
+      <h3>Cross-Tab: Results Stratified by Industry</h3>
+      <p class="muted">Nonprofit is largest (49%); Education (17%), Financial services (11%), Healthcare (7%), Corporate (7%). Financial services and Corporate show higher “very interested” (5) in AI.</p>
+      <div class="chart-container sm">
+        <canvas id="chartIndustry2"></canvas>
+      </div>
+    </section>
+
+    </div><!-- .main-content -->
+
+    <footer>
+      Governance Insights 2026 Survey Report. N=358. OnBoard | ©2026 Passageways, Inc. Confidential. All rights reserved.
+    </footer>
+  </div>
+
+  <div id="chart-error" style="display:none; margin:1rem 1.5rem; padding:1rem; background:#fff3cd; border:1px solid #ffc107; border-radius:8px; color:#856404;"></div>
+
+  <script type="application/json" id="survey-data">
+{
+  "n": 358,
+  "current_maturity": {
+    "Advanced: We have structured reporting across key governance areas, reviewed on a regular cadence, and it informs improvements and follow-through": 89,
+    "Basic: We track a few metrics (e.g., attendance), but they are not reviewed consistently or tied to improvement actions": 95,
+    "Informal: We rely on informal feedback and individual memory; there is little or no consistent reporting": 40,
+    "Developing: We review multiple areas periodically and can spot some trends, but insights aren\u2019t always timely, trusted, or acted on": 118,
+    "Not sure or not applicable": 16
+  },
+  "future_12mo": {
+    "Not sure or not applicable": 17,
+    "Developing - conduct periodic reviews and sporadic actions": 147,
+    "Basic - track a few metrics but not tie back to actions": 47,
+    "Advanced - have structured reporting that informs actions": 132,
+    "Informal - rely on individual memory and ad hoc reports": 15
+  },
+  "access_tool": {
+    "A series of executive led reports and dashboards across KPIs and strategic outcomes": 1,
+    "annual board survey": 1,
+    "Smart phone": 1,
+    "NA": 1,
+    "Onboard": 3,
+    "Nothing at present": 1,
+    "Spread sheets": 1,
+    "TATATAT": 1,
+    "sheets": 1,
+    "Various research Reports": 1,
+    "action logs and attendance reports": 1,
+    "Your platform on one board. PDFs from another board. And Microsoft 365 for another board": 1,
+    "Very informal since we have not directly addressed the issue. Now we will": 1,
+    "Several Committees, Board, and other Board.": 1,
+    "Attendance Tracking in Excel & a short Board Survey - launched this year": 1,
+    "Excel": 2,
+    "Meeting minutes and project boards": 1,
+    "External resources (e.g., Corporate Board; 3rd party consultants; external  counsel; trade associations like NACD, ACC, Industry coalitions that focus on governance)": 1,
+    "attendance and revenue": 1,
+    "Use of consultants as well as board member resources and expertise": 1,
+    "Canvas": 1,
+    "Web": 1,
+    "Typeform surveys and spreadsheets": 1,
+    "Email": 1,
+    "Informal surveys and conversations": 1,
+    "Manually - no system or tools": 1,
+    "25 year of governance experience membership of the Governance Institute of Australia and CPA Australia": 1,
+    "AICD seminars, Legalwise seminars, track Government bills and initiatives": 1,
+    "Surveys, approvals": 1,
+    "trade organization benchmarking; dropbox; website; member engagement; and board member experience": 1,
+    "Google?  I'm not sure what you mean by this question.": 1,
+    "We  try to anticipate what is coming down the pipeline as administrators and get ahead of it with board discussion/governance.": 1,
+    "NAIS, ISM": 1,
+    "?": 1,
+    "None yet": 1,
+    "OnBoard survey": 1,
+    "nothing": 1,
+    "Robert's Rules of Order & PTO By-laws": 1,
+    "Internet searches and LLMs": 1,
+    "Finance/Insurance": 1,
+    "GPC.D Membership": 1,
+    "ACCT": 1,
+    "Proprietary AI Agent": 1,
+    "Are you asking in OnBoard? I check to see if materials are being reviewed. If Who logs in, who never logs in": 1,
+    "Accounting and CRM software": 1,
+    "Corporate Guidelines": 1,
+    "online materials": 1,
+    "Governance Institute, ACNC, AICD": 1,
+    "review resources from association leadership organizations (ASAE; BoardSource)": 1,
+    "I don't know what board governance insights are, from a definitional perspective.": 1,
+    "Professional journals web sites webinars colleagues": 1,
+    "'-": 1,
+    "attendance statistics, engagement with committees": 1,
+    "I am a facilitator at the GIA and find that GIA provides considerable information in this area": 1,
+    "Australian Charities and Not for Profit Commission; newsletters": 1,
+    "municipal utility district": 1,
+    "email pdf docs": 1,
+    "Internal agenda management tool": 1,
+    "Facilitated retreats, meetings, research from professional organizations.": 1,
+    "Our charity offers online governance resources accessible to all Directors.": 1,
+    "my own system (not always great) but can't afford an onling platform": 1,
+    "no idea what you mean by \"systems\"": 1,
+    "Member of the Corporate Governance Institute, member of the Charity Governance Network, signed up to receive newsletters and updates from a variety of actors": 1,
+    "google": 1,
+    "In-person/virtual discussions, OnBoard": 1,
+    "Just OnBoard": 1,
+    "Just the minutes.": 1,
+    "Surveys": 1,
+    "We use a online portal.": 1,
+    "Paper": 1,
+    "Governance insights are accessed through board and committee materials, direct engagement with board leadership, internal documentation, and external best-practice resources such as the Institute of Corporate Directors (ICD).": 1,
+    "Bench marking, google search": 1,
+    "Through Board Committees": 1,
+    "Human": 1,
+    "I am a governance consultant and I can't figure out what this question means. Imagine how it would read to a volunteer board member of an unstaffed nonprofit just trying to do good but not even sure what governance is. That is the majority of nonprofits in the US tho perhaps not OnBoard target matket.": 1,
+    "OnBoard": 5,
+    "Board papers and minutes circulated in advance through OnBoard; informal knowledge built through experience; sub-committee reporting.": 1,
+    "online and in-person trainings and conferences": 1,
+    "Website": 2,
+    "Microsoft sharepoint collaboration": 1,
+    "OnBoard, AGB Member, Ask other foundation leaders in VA": 1,
+    "Carver's Policy Governance, Boardable, Govenda": 1,
+    "External readings and On Board": 1,
+    "Board Intelligence": 1,
+    "Board Source, AAM, Volunteer Hampton Roads": 1,
+    "Exponent Philanthropy": 1,
+    "Annual trustee governance survey; executive committee review of committee structures": 1,
+    "Data room": 1,
+    "Membership to professional body associations (AAE)": 1,
+    "Discussion": 1,
+    "Board Source primarily": 1,
+    "governance code": 1,
+    "None": 8,
+    "The Diligent system and regular discussion with our lawyers": 1,
+    "SharePoint": 2,
+    "Very manual processes, using Microsoft OneDrive": 1,
+    "Online internal reources": 1,
+    "Attending Governance training Fora": 1,
+    "Board Reports": 1,
+    "GVO portal sometimes": 1,
+    "PolicyTech and SharePoint": 1,
+    "Board Portals & Digital Tools": 1,
+    "Regular  reviews and Assessment Board governance insights can be accessed through various systems and approaches, including:\n-  frameworks like the policy governance model or traditional model can help structure board operations and decision-making.": 1,
+    "We currently utilise BoardPro.": 1,
+    "Sharepoint": 2,
+    "law firm alerts": 1,
+    "If the goal of this question is to understand where/how we access information/education about board governance, sources would be Canadian Society of Association Executives and the Institute of Corporate Directors.\n\nIf this question is about where does our board access insights to support their own strategy, decision making, and fiduciary duties, the answer would be from our own data.": 1,
+    "LinkedIn\nemails\nAICD\nGIA\nExec Reports\nPeak bodies": 1,
+    "We use systems such as Lexis Nexis and Policy Connect to keep across relgulatory requirements and changes. We access Governance Institute material for general governance insights": 1,
+    "ACNC - Australian Charities and NFP Commission": 1,
+    "The academy": 1,
+    "Random - AICD and other soutces": 1,
+    "Lean on the expertise of board members with governance experience": 1,
+    "Google, Chronicle of Philanthropy, random reports that cross my desk": 1,
+    "Committee discussions & surveys": 1,
+    "Directors desk": 1,
+    "In-house documents, spreadsheets, and dashboards": 1,
+    "Trade association, state regulator.": 1,
+    "Open sources - annual reports, business news, non-profit news, etc.": 1,
+    "Board restricted web portal": 1,
+    "1 on 1 meetings with board members\nCollect information at full board meetings\nGather information from board committee chairs": 1,
+    "Technology and Business Services": 1,
+    "No real systems.": 1,
+    "Sharepoint, Teams and Envisio": 1,
+    "We have a board portal which contains recent minutes available to all.  We take courses, attend FSRA conferences and conventions.  Summaries of these events are summarized to all board members and placed with the Governance folder on our board portal.": 1,
+    "microsoft teams": 1,
+    "Google Searches\nNational Council of Nonprofits\nLocal Nonprofit resource center": 1,
+    "I do not.": 1,
+    "None right now": 1,
+    "Manual creation of documents saved to OneDrive": 1,
+    "support staff, advisors, Microsoft 365 products for comms, docs, sharing, etc.": 1,
+    "We do not have a formal board portal, but rely on SHRM, CAAP Law and other resources available to us.": 1,
+    "Outside counsel, BoardSource, online research": 1,
+    "AGB": 2,
+    "In person and online platforms": 1,
+    "websites and consultants": 1,
+    "Association of Governing Boards": 1,
+    "Small group strategic discussions during board meeting": 1,
+    "ICD designation, courses, reading, training": 1,
+    "Board Effect": 6,
+    "We use Boardable as a repository of all governance materials, we also complete annual training and conflict of interest disclosure documents.": 1,
+    "Cooperative Association": 1,
+    "collaborative": 1,
+    "Nothing formal": 1,
+    "observation and data collection": 1,
+    "Best practice research & training": 1,
+    "Local newspapers and national organization resources and standards": 1,
+    "Minutes, discussion, committee work and committee minutes, staff memos": 1,
+    "No systems used": 1,
+    "ASAE, Associations West, OnBoard": 1,
+    "TASBO": 1,
+    "none": 3,
+    "OnBoard, Diligent": 1,
+    "None at this time.": 1,
+    "Consultant": 1,
+    "OTJ Training - This board position is not for my Financial Institution Employer but for a Non - Profit Organization that i currently serve as the Treasurer.": 1,
+    "Peer organizations; online research; consultants.": 1,
+    "We have a Board portal online": 1,
+    "Articles/Board Trainings/Governance Trainings": 1,
+    "Board Source and National Council of Nonprofits": 1,
+    "The California State University system provides updates, including CA education code. I also follow AGB for updates and latest trends.": 1,
+    "We have board reports at each meeting that offer key financial and program data. We have several board committees, such as strategic oversight, finance, and governance that each meet 5+ times a year to take a deep dive into data and planning applicable to each committee.": 1,
+    "Board Source, ASAE": 1,
+    "Salesforce": 1,
+    "survey monkey, monthly meetings": 1,
+    "Board Source\nPhilanthropic trade organizations": 1,
+    "Experience, Education (Wharton Governance Classes), Research, i.e. BoardSource": 1,
+    "OnBoard, ASAE, other": 1,
+    "AGB, CAAE, CASE": 1,
+    "Board minutes and Agendas. Committee minutes and reports": 1,
+    "Meeting engagement; book views; term tracking": 1,
+    "Not sure who the institution uses.": 1,
+    "Our board is small and the industry is not heavily diversified, so until having the option on OnBoard, we were not physically tracking or documenting board governance insights.": 1,
+    "OnBoard, Zoom": 1,
+    "OnBoard, yearly Statement of Confidentiality, financial disclosure, Expectations & Responsibilities, Code of Conduct,": 1,
+    "maintain close communication with peer organizations in the culture space,  especially where we share Board members": 1,
+    "Asking questions of company subject matter experts ahead of board meeting, speaking with other board members and seeking out independent data sources.": 1,
+    "online research, ASAE, ONBoard, BoardSource": 1,
+    "No consistent approaches.": 1,
+    "Speaking from my organization's board as well as boards I sit on: Files are made available via Sharepoint or Google Drive. We track Strategic Goals in spreadsheets and have periodic updates. We try and also provide KPI s for various areas of the museum. We have each committee develop annual goals shared with Board and Committee staff leads to build accountability. The Board chair, Development Director, and me (ED) meet with each Board member annually to make sure we are utilizing their skills adequately.  We do annual evaluation of Board self-performance and try and address any issues that arise from that feedback.": 1,
+    "reports, PDFs, AI": 1,
+    "Boardvantage": 1,
+    "Polling, work of Governance Committee": 1,
+    "researsch": 1,
+    "Professional organizations like ASAE, WSAE, and others": 1,
+    "The orgs I have served never had capacity for formalized systems - just a hodge podge of reports and statements.": 1,
+    "We use Onboard board management platform": 1,
+    "Formal evaluations, interviews, peer assessments and open communications.": 1,
+    "asae reports, emerging risks for the industry we serve, financials and flash poll data": 1,
+    "We are using OnBoard. There are several people involved in the preparation of the board packet.": 1,
+    "Email and verbal feedback": 1,
+    "Board Retreats, Surveys, current articles/publications": 1,
+    "Surveys (qualtrics) and manual interviewing": 1,
+    "No formal systems or approaches.": 1,
+    "I serve on multiple boards.  One of my boards is government so there are a lot of systems in place by the government to insure we are keeping up with all new governance, plus we have a solicitor to help with all of that.  On other boards, it is my job with the help of our outside auditors to ensure that we are doing everything correctly.  Unfortunately, that doesn't always happen because of human error.": 1,
+    "Peer private club groups; CMAA; NCA; Notable;": 1,
+    "Diligent board effect": 1,
+    "State League": 1,
+    "We worked with a consultant. Our Governance Committee also keeps up with insights.": 1,
+    "Email, Excel, shared platforms like Google Drive or Box": 1,
+    "The internet or what\u2019s shared through council": 1,
+    "Board effect": 1,
+    "We use excel, word, and Zoom": 1,
+    "Unit reports, shared calendar": 1,
+    "NACH": 1,
+    "Other board members": 1,
+    "Email & website": 1,
+    "Regular meetings and communication": 1,
+    "We use Robert\u2019s rules of order.": 1,
+    "Board portal with one board, manually with the other.": 1,
+    "A shared Portal accessible on the cloud through single sign in.": 1,
+    "Ostendio": 1,
+    "Corporate Board Directors, PDA, WBL": 1,
+    "We use a combination of a Onboard management platform, committee reporting, executive dashboards, and periodic governance training and strategic planning sessions to access board governance insights": 1,
+    "Have used Diligent Boards and Board Pro": 1,
+    "Webinars, conferences, Board portal": 1,
+    "Professionals Contractors share during board retreat": 1,
+    "Small meetings and committee meetings": 1,
+    "Group process": 1,
+    "Nonprofit Leadership Lab": 1,
+    "Pre-reads, CI (Cortellis), our own system (Sevanta)": 1,
+    "Sharedrive on Microsoft and manual analysis": 1,
+    "Zeck": 1,
+    "We don't but just joined Onboard so plan to use that once the board is trained and info entered in.": 1,
+    "Reports and meeting notes": 1,
+    "Board Source, Fellow CEOs, Board members who serve on multiple boards": 1,
+    "We operate under a policy governance model that provides clear role definition, decision authority, and performance expectations for the board and CEO. I use board policies, monitoring reports, agenda design, and committee work to assess board effectiveness, compliance, and alignment with strategic priorities. I also rely on environmental scanning, including industry trends, risk signals, and external drivers, to inform board discussions and anticipate governance implications. Together, these systems provide both internal and external insight into board performance and readiness.": 1,
+    "The AI tool within the program": 1,
+    "State nonprofit association (membership), podcasts, Board survey/analysis, articles": 1,
+    "Use fed information, Governing corporation that supports us, local information, research on line,": 1,
+    "Combination of structured reporting and active board engagement": 1,
+    "verbal and voting": 1,
+    "BoardSource, OnBoard materials, Philanthropy Today": 1,
+    "Internal surveys and publicly available research papers": 1,
+    "Reports and Data from Program and Donor Tracking Databases.": 1,
+    "N/A": 2,
+    "Publications, AGB": 1,
+    "Director's Desk\nemail\nResearch": 1,
+    "Surveys, strategic planning meetings, Onboard.": 1,
+    "BI power tools, framework for customer intelligence/members needs.  Analytics and qualitative input from member and broader market trends.  Link to strategic and tactical goals, tracking outcomes and financial impacts.": 1,
+    "onboard": 1,
+    "None at the moment": 1,
+    "Paper copies.": 1,
+    "CFO Direct\nBoardVantage": 1,
+    "hardcopies": 1,
+    "We don't use anything": 1,
+    "Box, counsel, experienced individuals": 1,
+    "PowerPoint presentations": 1,
+    "Manual board packets sent via email": 1,
+    "Bylaws, Board Governance Policies, Board Portal": 1,
+    "Use policies and procedures documents with timelines for requirements": 1,
+    "in person meetings": 1,
+    "emails": 1,
+    "We access board governance insights through regular management and board reviews, structured reporting and dashboards, and documented governance policies. These are complemented by risk and compliance assessments, external legal or advisory input when required, and benchmarking against industry best practices to support informed decision-making.": 1,
+    "Governance models and frameworks\nDigital Platforms and Analytics\nBoard Portals": 1,
+    "Jira": 1,
+    "Board Portals": 1,
+    "Research across various governance organizations, comparative institutions": 1,
+    "Board portals (e.g., Diligent, BoardEffect, Boardvantage) for meeting materials, policies, and dashboards\n\nGovernance frameworks and codes (OECD Principles of Corporate Governance, NACD guidelines)\n\nBoard handbooks and charters outlining roles, responsibilities, and best practices": 1,
+    "informal": 1,
+    "Documents shared in person or stored in onboard": 1,
+    "Consultant - Areas e of expertise/specialties: Governance, Risk Management and Anti-Money Laundering": 1,
+    "Internal Corporate Governance Teams": 1,
+    "n/a": 1,
+    "working with external consultants/advisers and research of third party materials": 1,
+    "AI-Powered Board Reporting & Insight Platforms\nCorporate Governance & GRC Platforms\nBoard Portals": 1,
+    "BoardEffect": 1,
+    "external experts and contracted professional services to id external and emerging risks": 1,
+    "Combination of board materials, governance resources and peer discussions": 1,
+    "Very few.  Some online resources.": 1,
+    "Google docs and other Google tools": 1,
+    "News articles, various email lists": 1,
+    "Membership in accreditation organizaitons": 1,
+    "I manage a chapter so I receive insight from our national newsletter. I also meet with chapters similar in size on a monthly basis to discuss issues affecting the industry. We also have a board member who reports issues from the state perspective.": 1,
+    "Accreditation reports": 1,
+    "Through Onboard tool and individual member feedback": 1,
+    "Research best practices via e-newsletters, webinars, websites from trusted organizations and though leaders on board governance": 1,
+    "Mobile devices with Onboard": 1,
+    "meetings": 1,
+    "Copilot and One Note": 1,
+    "Of date board not active : Governance insights Group Board Training": 1,
+    "Consulting companies, NCEO, friends": 1,
+    "An annual on-line Board Governance practices": 1,
+    "test": 6
+  },
+  "ai_interest": {
+    "4": 88,
+    "5": 65,
+    "3": 105,
+    "1": 48,
+    "2": 52
+  },
+  "ai_expectation_12mo": {
+    "Low expectation (unlikely within 12 months)": 78,
+    "Moderate expectation (likely within 12 months, but no active plan yet)": 121,
+    "High expectation (actively planning or piloting within 12 months)": 26,
+    "No expectation (not planned)": 81,
+    "Already using AI for governance insights today": 29,
+    "Not sure": 23
+  },
+  "industry": {
+    "Nonprofit": 177,
+    "Financial services": 40,
+    "Healthcare": 25,
+    "Education": 59,
+    "Corporate": 24,
+    "Other (please specify)": 20,
+    "Government": 8
+  },
+  "role": {
+    "CEO/President": 31,
+    "Board Director/Member": 174,
+    "Corporate Secretary/General Counsel": 44,
+    "Executive Director": 32,
+    "Board Administrator": 55,
+    "Other": 22
+  },
+  "barriers": [
+    {
+      "label": "Not captured at all",
+      "count": 51
+    },
+    {
+      "label": "Exists but fragmented/manual",
+      "count": 195
+    },
+    {
+      "label": "Hard to locate",
+      "count": 79
+    },
+    {
+      "label": "Too late",
+      "count": 38
+    },
+    {
+      "label": "Not trusted",
+      "count": 40
+    },
+    {
+      "label": "Not actionable",
+      "count": 80
+    },
+    {
+      "label": "No owner/follow-through",
+      "count": 114
+    }
+  ],
+  "ai_requirements": [
+    {
+      "label": "Clear citations/evidence links back to source materials",
+      "count": 164
+    },
+    {
+      "label": "Transparent audit trail (how the insight was generated)",
+      "count": 196
+    },
+    {
+      "label": "Ability to drill down and validate",
+      "count": 179
+    },
+    {
+      "label": "Human review/approval controls before sharing broadly",
+      "count": 210
+    },
+    {
+      "label": "Strong data privacy controls and permissions",
+      "count": 216
+    },
+    {
+      "label": "Ability to control what content is included/excluded",
+      "count": 172
+    },
+    {
+      "label": "Clear handling of sensitive topics (legal, HR, investigations)",
+      "count": 184
+    },
+    {
+      "label": "Accuracy/quality thresholds and ongoing monitoring",
+      "count": 152
+    }
+  ],
+  "ease_by_area": [
+    {
+      "area": "Meetings run",
+      "pct_easy": 61
+    },
+    {
+      "area": "Materials",
+      "pct_easy": 56
+    },
+    {
+      "area": "Follow-through",
+      "pct_easy": 46
+    },
+    {
+      "area": "Committees",
+      "pct_easy": 45
+    },
+    {
+      "area": "Discussions",
+      "pct_easy": 45
+    },
+    {
+      "area": "Oversight/risk",
+      "pct_easy": 42
+    },
+    {
+      "area": "Strategy",
+      "pct_easy": 40
+    },
+    {
+      "area": "Composition",
+      "pct_easy": 38
+    },
+    {
+      "area": "Director engagement",
+      "pct_easy": 38
+    }
+  ],
+  "ai_priority_first": [
+    {
+      "label": "Board skills, independence & succession",
+      "count": 60
+    },
+    {
+      "label": "Quality & timeliness of board materials",
+      "count": 58
+    },
+    {
+      "label": "Progress on strategy & key priorities",
+      "count": 55
+    },
+    {
+      "label": "Early warning on risks & compliance",
+      "count": 48
+    },
+    {
+      "label": "Follow-through on actions between meetings",
+      "count": 44
+    },
+    {
+      "label": "Board meeting focus & time use",
+      "count": 36
+    },
+    {
+      "label": "Director engagement beyond attendance",
+      "count": 26
+    },
+    {
+      "label": "Committee work, decisions & monitoring",
+      "count": 20
+    },
+    {
+      "label": "Quality & balance of meeting discussions",
+      "count": 11
+    }
+  ],
+  "value_quotes": [
+    {
+      "quote": "WE have been crafting an investment policy for 4 years and can't get traction!",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "timeliness of decision making/follow through",
+      "role": "Corporate Secretary/General Counsel",
+      "industry": "Financial services"
+    },
+    {
+      "quote": "How to collaborate better. I would recognize improvement when things move through the board more quickly.",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "with time to save manually logging and with decision quality and follow through of actions",
+      "role": "Corporate Secretary/General Counsel",
+      "industry": "Education"
+    },
+    {
+      "quote": "Strategic decisions are made in a timely fashion.",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "better job of creating actiona and follow thru to execute a  set strategy",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "Decision quality would allow for greater engagement",
+      "role": "CEO/President",
+      "industry": "Unknown"
+    },
+    {
+      "quote": "Role of the board vs management; risk oversight.",
+      "role": "Board Director/Member",
+      "industry": "Other (please specify)"
+    },
+    {
+      "quote": "With centralized and/or automated assistance, we would be less dependent on staff and each other to collect and analyze data.",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "Amt of pushback legal or otherwise",
+      "role": "CEO/President",
+      "industry": "Education"
+    },
+    {
+      "quote": "Expectations and reporting standards by committees. Strategic planning outline and making the plan evergreen. At director initiation a document that outlines expectations while onboarding. When recruiting directors things that signal \u2018red flags\u2019. Not every CEO makes a qualified \u201cteamwork\u201d type of director.",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "Follow through and passionate engagement",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "A strong Chair that ensures that executive responses and delivers on Board directions.",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "risk mitigation; time savings; decision quality; more productive board meetings with greater follow-through on decisions; more productive discussions with well-prepared board members",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "Save time, clarify job roles and increase confidence",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "Time - Noticeable work and recording of actions",
+      "role": "Corporate Secretary/General Counsel",
+      "industry": "Education"
+    },
+    {
+      "quote": "Utilization of committees and committees charged to do their task and report to  board versus all decisions coming to full board.",
+      "role": "Corporate Secretary/General Counsel",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "decision quality. diversity of board expertise",
+      "role": "Other",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "I think the board would actually function and get stuff done if we had some better insights around time and follow through. Things would improve and we could make forward progress.",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "By-laws written by parents, a do over since the current one was appointed and not elected in a school wide how it works not just give me your name",
+      "role": "Other",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "The structure, timing and quality of content would improve",
+      "role": "Board Director/Member",
+      "industry": "Other (please specify)"
+    },
+    {
+      "quote": "Over time, stronger governance insights would show up in improved board satisfaction, more effective use of meeting time, and clearer alignment between board direction, management execution, and organizational outcomes.",
+      "role": "Corporate Secretary/General Counsel",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "Our board needs to remove themselves from operations and speak with one voice. If things improved, we would see a more efficient board providing clearer direction.",
+      "role": "Board Administrator",
+      "industry": "Education"
+    },
+    {
+      "quote": "Having a space to note next steps, action items and then to note/capture the output or finished date would be a great KPI",
+      "role": "Board Administrator",
+      "industry": "Education"
+    },
+    {
+      "quote": "Follow through and holding to account",
+      "role": "Board Director/Member",
+      "industry": "Corporate"
+    },
+    {
+      "quote": "Decision quality, less time consumption",
+      "role": "Board Director/Member",
+      "industry": "Education"
+    },
+    {
+      "quote": "better use of board members' time/attention",
+      "role": "CEO/President",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "decision quality at strategic level / monitor/follow through on directors/senior managers engagement at and between meetings",
+      "role": "Corporate Secretary/General Counsel",
+      "industry": "Corporate"
+    },
+    {
+      "quote": "transparency on follow up to decisions",
+      "role": "Executive Director",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "Greater Director engagement and leadership",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "More engagement by more directors, more attention during meetings, leave personal concerns at the door, represent the membership not self interest. Get the nominating committee to follow guidance and select candidates that could fill board inadequacy in certain areas.",
+      "role": "Board Director/Member",
+      "industry": "Financial services"
+    },
+    {
+      "quote": "time together outside of meetings",
+      "role": "Board Director/Member",
+      "industry": "Other (please specify)"
+    },
+    {
+      "quote": "More effective communication and improved outcomes.",
+      "role": "Board Director/Member",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "We cannot afford user licences for all staff members with responsibility for document creation and reporting in addition to all the volunteer Directors. Some individuals don't deliver until the last minute, creating a bottleneck for the (part time) administrator.",
+      "role": "Board Administrator",
+      "industry": "Nonprofit"
+    },
+    {
+      "quote": "Tim could be reduced if they were more automated/less manual",
+      "role": "Corporate Secretary/General Counsel",
+      "industry": "Nonprofit"
+    }
+  ]
+}
+  </script>
+  <script>
+    (function() {
+      function showError(msg) {
+        var el = document.getElementById('chart-error');
+        if (el) { el.textContent = msg; el.style.display = 'block'; }
+      }
+      if (typeof Chart === 'undefined') {
+        showError('Charts: Chart.js did not load. Check your connection or try again later.');
+        return;
+      }
+      const hasDataLabels = typeof ChartDataLabels !== 'undefined';
+      if (hasDataLabels) Chart.register(ChartDataLabels);
+      var origin = window.location.origin;
+      var path = (window.location.pathname || '/').replace(/#.*$/, '');
+      if (!path.endsWith('/')) path = path.replace(/\/[^/]*$/, '/') || '/';
+      var base = origin + path;
+      var dataUrl = base + 'survey_summary.json';
+      const shortMaturity = (s) => {
+        if (!s) return 'Other';
+        if (s.startsWith('Advanced')) return 'Advanced';
+        if (s.startsWith('Developing')) return 'Developing';
+        if (s.startsWith('Basic')) return 'Basic';
+        if (s.startsWith('Informal')) return 'Informal';
+        return 'Not sure / N/A';
+      };
+      const shortFuture = (s) => {
+        if (!s) return 'Other';
+        if (s.startsWith('Developing')) return 'Developing';
+        if (s.startsWith('Advanced')) return 'Advanced';
+        if (s.startsWith('Basic')) return 'Basic';
+        if (s.startsWith('Informal')) return 'Informal';
+        return 'Not sure / N/A';
+      };
+      /* OnBoard secondary/digital palette - keep different colors */
+      const chartColors = ['#4C4084', '#3B2CEA', '#6359DE', '#C5299B', '#FF8024', '#68D4FC', '#AC9EFF', '#FB00AE'];
+      const gridColor = 'rgba(32, 21, 71, 0.08)';
+      const tickColor = '#4C4084';
+
+      function loadData() {
+        return fetch(dataUrl).then(r => {
+          if (r.ok) return r.json();
+          return fetch(base + 'data/survey_summary.json').then(r2 => r2.ok ? r2.json() : Promise.reject(new Error('Data not found')));
+        });
+      }
+      function getData() {
+        var el = document.getElementById('survey-data');
+        if (el && el.textContent) {
+          try { return Promise.resolve(JSON.parse(el.textContent)); } catch (e) {}
+        }
+        return loadData();
+      }
+      getData()
+        .then(d => {
+          if (!d || typeof d.n === 'undefined') {
+            showError('Charts: Invalid data format.');
+            return;
+          }
+          const n = d.n;
+          document.getElementById('stat-n').textContent = n;
+          document.getElementById('n-participants').textContent = n;
+          document.getElementById('n-industry').textContent = n;
+
+          function createBarChart(id, labels, counts, colors) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            new Chart(el, {
+              type: 'bar',
+              data: {
+                labels,
+                datasets: [{ label: 'Responses', data: counts, backgroundColor: colors.slice(0, labels.length) }]
+              },
+              options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
+                  y: { grid: { display: false }, ticks: { color: '#201547' } }
+                }
+              }
+            });
+          }
+          function createDoughnut(id, labels, counts, colors) {
+            const total = counts.reduce((a, b) => a + b, 0);
+            const opts = {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'right' }
+              }
+            };
+            if (hasDataLabels) {
+              opts.plugins.datalabels = {
+                color: '#fff',
+                font: { size: 11, weight: 'bold' },
+                formatter: (value) => total ? (value * 100 / total).toFixed(0) + '%' : ''
+              };
+            }
+            var el = document.getElementById(id);
+            if (!el) return;
+            new Chart(el, {
+              type: 'doughnut',
+              data: { labels, datasets: [{ data: counts, backgroundColor: colors }] },
+              plugins: hasDataLabels ? [ChartDataLabels] : [],
+              options: opts
+            });
+          }
+
+          const mat = d.current_maturity || {};
+          createBarChart('chartMaturity', Object.keys(mat).map(shortMaturity), Object.values(mat), chartColors);
+
+          const fut = d.future_12mo || {};
+          createBarChart('chartFuture', Object.keys(fut).map(shortFuture), Object.values(fut), chartColors);
+
+          const aiInt = d.ai_interest || {};
+          const order = ['1','2','3','4','5'];
+          const aiIntLabels = order.map(i => i === '1' ? '1 (Not interested)' : i === '5' ? '5 (Very interested)' : i);
+          const aiIntData = order.map(i => aiInt[i] || 0);
+          new Chart(document.getElementById('chartAIInterest'), {
+            type: 'bar',
+            data: {
+              labels: aiIntLabels,
+              datasets: [{ label: 'Responses', data: aiIntData, backgroundColor: chartColors }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
+                x: { grid: { display: false }, ticks: { color: '#201547' } }
+              }
+            }
+          });
+
+          const aiExp = d.ai_expectation_12mo || {};
+          createDoughnut('chartAIExpectation', Object.keys(aiExp), Object.values(aiExp), chartColors);
+
+          const req = (d.ai_requirements || []).slice(0, 8);
+          function wrapLabel(str, maxLen) {
+            if (!str || str.length <= maxLen) return str;
+            const words = str.split(' ');
+            let line = '', lines = [];
+            words.forEach(w => {
+              if ((line + (line ? ' ' : '') + w).length <= maxLen) line += (line ? ' ' : '') + w;
+              else { if (line) lines.push(line); line = w; }
+            });
+            if (line) lines.push(line);
+            return lines.join('\n');
+          }
+          new Chart(document.getElementById('chartAIRequirements'), {
+            type: 'bar',
+            data: {
+              labels: req.map(r => wrapLabel(r.label, 42)),
+              datasets: [{ label: 'Selected', data: req.map(r => r.count), backgroundColor: '#4C4084' }]
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: { padding: { left: 8, right: 8 } },
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
+                y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 }, autoSkip: false }
+              }
+            }
+          });
+
+          const ease = d.ease_by_area || [];
+          if (ease.length) {
+            new Chart(document.getElementById('chartEase'), {
+              type: 'bar',
+              data: {
+                labels: ease.map(e => e.area),
+                datasets: [{ label: '% Easy + Very Easy', data: ease.map(e => e.pct_easy), backgroundColor: '#4C4084' }]
+              },
+              options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: { min: 0, max: 100, grid: { color: gridColor }, ticks: { color: tickColor, callback: v => v + '%' } },
+                  y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 } } }
+                }
+              }
+            });
+          }
+          const bar = d.barriers || [];
+          new Chart(document.getElementById('chartBarriers'), {
+            type: 'bar',
+            data: {
+              labels: bar.map(b => b.label),
+              datasets: [{ label: 'Mentions', data: bar.map(b => b.count), backgroundColor: '#C5299B' }]
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
+                y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 } } }
+              }
+            }
+          });
+
+          const role = d.role || {};
+          createDoughnut('chartRole', Object.keys(role), Object.values(role), chartColors);
+          const roleCountsEl = document.getElementById('role-counts');
+          if (roleCountsEl && Object.keys(role).length) {
+            const total = Object.values(role).reduce((a, b) => a + b, 0);
+            roleCountsEl.innerHTML = 'Exact counts: ' + Object.entries(role).map(([name, count]) => `${name} <strong>${count}</strong>`).join(' · ') + ` (total ${total}).`;
+          }
+
+          const ind = d.industry || {};
+          const indLabels = Object.keys(ind).filter(k => k !== 'Unknown');
+          const indCounts = indLabels.map(k => ind[k]);
+          createDoughnut('chartIndustry', indLabels, indCounts, chartColors);
+          createDoughnut('chartIndustry2', indLabels, indCounts, chartColors);
+
+          const aiPriority = d.ai_priority_first || [];
+          if (aiPriority.length) {
+            new Chart(document.getElementById('chartAIPriority'), {
+              type: 'bar',
+              data: {
+                labels: aiPriority.map(p => wrapLabel(p.label, 42)),
+                datasets: [{ label: 'Responses', data: aiPriority.map(p => p.count), backgroundColor: chartColors }]
+              },
+              options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: { padding: { left: 8, right: 8 } },
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
+                  y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 }, autoSkip: false }
+                }
+              }
+            });
+          }
+
+          const quotes = d.value_quotes || [];
+          const qContainer = document.getElementById('quotes-container');
+          if (quotes.length && qContainer) {
+            const isObj = typeof quotes[0] === 'object' && quotes[0].quote !== undefined;
+            const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            qContainer.innerHTML = quotes.slice(0, 18).map(q => {
+              const text = isObj ? q.quote : q;
+              const att = isObj ? (q.role && q.industry && q.industry !== 'Unknown' ? `— ${q.role}, ${q.industry}` : q.role ? `— ${q.role}` : '') : '';
+              return `<blockquote>“${esc(text)}”${att ? `<div class="quote-attribution">${esc(att)}</div>` : ''}</blockquote>`;
+            }).join('');
+          }
+        })
+        .catch(e => { console.error('Load data failed', e); showError('Charts: Could not load data. (' + (e.message || 'network error') + ')'); });
+    })();
+  </script>
+</body>
+</html>
