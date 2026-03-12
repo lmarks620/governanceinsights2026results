@@ -7,8 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <style>
     /* OnBoard Brand: primary #201547 deep purple, #4C4084 royal purple, #C5299B magenta, #F2F2F2 gray */
     /* Secondary/digital: #3B2CEA, #6359DE, #AC9EFF, #68D4FC, #FF8024, #FB00AE */
@@ -155,9 +153,15 @@
     }
     .stat-card .num { font-size: 1.6rem; font-weight: 700; color: var(--ob-royal); }
     .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
-    .chart-container { position: relative; height: 280px; margin: 1.75rem 0 2rem; }
-    .chart-container.sm { height: 240px; margin: 1.75rem 0 1.75rem; }
-    .chart-container-wide { height: 320px; }
+    .chart-container { position: relative; min-height: 200px; margin: 1.75rem 0 2rem; }
+    .chart-container.sm { min-height: 180px; margin: 1.75rem 0 1.75rem; }
+    .chart-container-wide { min-height: 280px; }
+    .html-chart { font-family: 'Poppins', system-ui, sans-serif; }
+    .html-bar-item { display: flex; align-items: center; margin-bottom: 0.5rem; gap: 0.5rem; }
+    .html-bar-label { flex: 0 0 220px; font-size: 0.85rem; color: #201547; }
+    .html-bar-track { flex: 1; min-width: 60px; height: 22px; background: rgba(32,21,71,0.08); border-radius: 4px; overflow: hidden; }
+    .html-bar-fill { height: 100%; border-radius: 4px; min-width: 2px; }
+    .html-bar-value { flex: 0 0 40px; font-size: 0.85rem; font-weight: 600; color: #4C4084; text-align: right; }
     .insight-box {
       background: rgba(76, 64, 132, 0.06);
       border-left: 4px solid var(--insight-border);
@@ -1205,264 +1209,122 @@
 }
   </script>
   <script>
-    (function() {
-      if (typeof Chart === 'undefined') return;
-      const hasDataLabels = typeof ChartDataLabels !== 'undefined';
-      if (hasDataLabels) Chart.register(ChartDataLabels);
-      var origin = window.location.origin;
-      var path = (window.location.pathname || '/').replace(/#.*$/, '');
-      if (!path.endsWith('/')) path = path.replace(/\/[^/]*$/, '/') || '/';
-      var base = origin + path;
-      var dataUrl = base + 'survey_summary.json';
-      const shortMaturity = (s) => {
-        if (!s) return 'Other';
-        if (s.startsWith('Advanced')) return 'Advanced';
-        if (s.startsWith('Developing')) return 'Developing';
-        if (s.startsWith('Basic')) return 'Basic';
-        if (s.startsWith('Informal')) return 'Informal';
-        return 'Not sure / N/A';
-      };
-      const shortFuture = (s) => {
-        if (!s) return 'Other';
-        if (s.startsWith('Developing')) return 'Developing';
-        if (s.startsWith('Advanced')) return 'Advanced';
-        if (s.startsWith('Basic')) return 'Basic';
-        if (s.startsWith('Informal')) return 'Informal';
-        return 'Not sure / N/A';
-      };
-      /* OnBoard secondary/digital palette - keep different colors */
-      const chartColors = ['#4C4084', '#3B2CEA', '#6359DE', '#C5299B', '#FF8024', '#68D4FC', '#AC9EFF', '#FB00AE'];
-      const gridColor = 'rgba(32, 21, 71, 0.08)';
-      const tickColor = '#4C4084';
+(function() {
+  var chartColors = ['#4C4084', '#3B2CEA', '#6359DE', '#C5299B', '#FF8024', '#68D4FC', '#AC9EFF', '#FB00AE'];
+  function shortMaturity(s) {
+    if (!s) return 'Other';
+    if (s.indexOf('Advanced') === 0) return 'Advanced';
+    if (s.indexOf('Developing') === 0) return 'Developing';
+    if (s.indexOf('Basic') === 0) return 'Basic';
+    if (s.indexOf('Informal') === 0) return 'Informal';
+    return 'Not sure / N/A';
+  }
+  function shortFuture(s) {
+    if (!s) return 'Other';
+    if (s.indexOf('Developing') === 0) return 'Developing';
+    if (s.indexOf('Advanced') === 0) return 'Advanced';
+    if (s.indexOf('Basic') === 0) return 'Basic';
+    if (s.indexOf('Informal') === 0) return 'Informal';
+    return 'Not sure / N/A';
+  }
+  function renderBarChart(id, labels, values, colors, maxVal) {
+    var wrap = document.getElementById(id);
+    if (!wrap) return;
+    var parent = wrap.parentNode;
+    var div = document.createElement('div');
+    div.className = 'html-chart';
+    if (!maxVal) maxVal = Math.max.apply(null, values) || 1;
+    var html = '';
+    for (var i = 0; i < labels.length; i++) {
+      var pct = maxVal ? (100 * values[i] / maxVal) : 0;
+      var color = colors[i % colors.length] || '#4C4084';
+      html += '<div class="html-bar-item"><span class="html-bar-label">' + escapeHtml(labels[i]) + '</span><div class="html-bar-track"><div class="html-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div><span class="html-bar-value">' + values[i] + '</span></div>';
+    }
+    div.innerHTML = html;
+    parent.replaceChild(div, wrap);
+  }
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+  function getData() {
+    var el = document.getElementById('survey-data');
+    if (el && el.textContent) {
+      try { return JSON.parse(el.textContent); } catch (e) {}
+    }
+    return null;
+  }
+  function run() {
+    var d = getData();
+    if (!d || typeof d.n !== 'number') return;
+    var n = d.n;
+    var statN = document.getElementById('stat-n'); if (statN) statN.textContent = n;
+    var np = document.getElementById('n-participants'); if (np) np.textContent = n;
+    var ni = document.getElementById('n-industry'); if (ni) ni.textContent = n;
 
-      function loadData() {
-        return fetch(dataUrl).then(r => {
-          if (r.ok) return r.json();
-          return fetch(base + 'data/survey_summary.json').then(r2 => r2.ok ? r2.json() : Promise.reject(new Error('Data not found')));
-        });
-      }
-      function getData() {
-        var el = document.getElementById('survey-data');
-        if (el && el.textContent) {
-          try { return Promise.resolve(JSON.parse(el.textContent)); } catch (e) {}
-        }
-        return loadData();
-      }
-      function runCharts() {
-      getData()
-        .then(d => {
-          try {
-          if (!d || typeof d.n === 'undefined') return;
-          const n = d.n;
-          var statN = document.getElementById('stat-n');
-          if (statN) statN.textContent = n;
-          var np = document.getElementById('n-participants'); if (np) np.textContent = n;
-          var ni = document.getElementById('n-industry'); if (ni) ni.textContent = n;
+    var mat = d.current_maturity || {};
+    var matKeys = Object.keys(mat);
+    renderBarChart('chartMaturity', matKeys.map(shortMaturity), matKeys.map(function(k) { return mat[k]; }), chartColors);
 
-          function createBarChart(id, labels, counts, colors) {
-            var el = document.getElementById(id);
-            if (!el) return;
-            new Chart(el, {
-              type: 'bar',
-              data: {
-                labels,
-                datasets: [{ label: 'Responses', data: counts, backgroundColor: colors.slice(0, labels.length) }]
-              },
-              options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                  x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
-                  y: { grid: { display: false }, ticks: { color: '#201547' } }
-                }
-              }
-            });
-          }
-          function createDoughnut(id, labels, counts, colors) {
-            const total = counts.reduce((a, b) => a + b, 0);
-            const opts = {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: { position: 'right' }
-              }
-            };
-            if (hasDataLabels) {
-              opts.plugins.datalabels = {
-                color: '#fff',
-                font: { size: 11, weight: 'bold' },
-                formatter: (value) => total ? (value * 100 / total).toFixed(0) + '%' : ''
-              };
-            }
-            var el = document.getElementById(id);
-            if (!el) return;
-            new Chart(el, {
-              type: 'doughnut',
-              data: { labels, datasets: [{ data: counts, backgroundColor: colors }] },
-              plugins: hasDataLabels ? [ChartDataLabels] : [],
-              options: opts
-            });
-          }
+    var fut = d.future_12mo || {};
+    var futKeys = Object.keys(fut);
+    renderBarChart('chartFuture', futKeys.map(shortFuture), futKeys.map(function(k) { return fut[k]; }), chartColors);
 
-          const mat = d.current_maturity || {};
-          createBarChart('chartMaturity', Object.keys(mat).map(shortMaturity), Object.values(mat), chartColors);
+    var aiInt = d.ai_interest || {};
+    var order = ['1','2','3','4','5'];
+    var aiIntLabels = order.map(function(i) { return i === '1' ? '1 (Not interested)' : i === '5' ? '5 (Very interested)' : i; });
+    var aiIntData = order.map(function(i) { return aiInt[i] || 0; });
+    renderBarChart('chartAIInterest', aiIntLabels, aiIntData, chartColors);
 
-          const fut = d.future_12mo || {};
-          createBarChart('chartFuture', Object.keys(fut).map(shortFuture), Object.values(fut), chartColors);
+    var aiExp = d.ai_expectation_12mo || {};
+    var aiExpKeys = Object.keys(aiExp);
+    renderBarChart('chartAIExpectation', aiExpKeys, aiExpKeys.map(function(k) { return aiExp[k]; }), chartColors);
 
-          const aiInt = d.ai_interest || {};
-          const order = ['1','2','3','4','5'];
-          const aiIntLabels = order.map(i => i === '1' ? '1 (Not interested)' : i === '5' ? '5 (Very interested)' : i);
-          const aiIntData = order.map(i => aiInt[i] || 0);
-          new Chart(document.getElementById('chartAIInterest'), {
-            type: 'bar',
-            data: {
-              labels: aiIntLabels,
-              datasets: [{ label: 'Responses', data: aiIntData, backgroundColor: chartColors }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false } },
-              scales: {
-                y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
-                x: { grid: { display: false }, ticks: { color: '#201547' } }
-              }
-            }
-          });
+    var req = (d.ai_requirements || []).slice(0, 8);
+    if (req.length) renderBarChart('chartAIRequirements', req.map(function(r) { return r.label; }), req.map(function(r) { return r.count; }), ['#4C4084']);
 
-          const aiExp = d.ai_expectation_12mo || {};
-          createDoughnut('chartAIExpectation', Object.keys(aiExp), Object.values(aiExp), chartColors);
+    var ease = d.ease_by_area || [];
+    if (ease.length) renderBarChart('chartEase', ease.map(function(e) { return e.area; }), ease.map(function(e) { return e.pct_easy; }), ['#4C4084'], 100);
 
-          const req = (d.ai_requirements || []).slice(0, 8);
-          function wrapLabel(str, maxLen) {
-            if (!str || str.length <= maxLen) return str;
-            const words = str.split(' ');
-            let line = '', lines = [];
-            words.forEach(w => {
-              if ((line + (line ? ' ' : '') + w).length <= maxLen) line += (line ? ' ' : '') + w;
-              else { if (line) lines.push(line); line = w; }
-            });
-            if (line) lines.push(line);
-            return lines.join('\n');
-          }
-          new Chart(document.getElementById('chartAIRequirements'), {
-            type: 'bar',
-            data: {
-              labels: req.map(r => wrapLabel(r.label, 42)),
-              datasets: [{ label: 'Selected', data: req.map(r => r.count), backgroundColor: '#4C4084' }]
-            },
-            options: {
-              indexAxis: 'y',
-              responsive: true,
-              maintainAspectRatio: false,
-              layout: { padding: { left: 8, right: 8 } },
-              plugins: { legend: { display: false } },
-              scales: {
-                x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
-                y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 }, autoSkip: false }
-              }
-            }
-          });
+    var bar = d.barriers || [];
+    if (bar.length) renderBarChart('chartBarriers', bar.map(function(b) { return b.label; }), bar.map(function(b) { return b.count; }), ['#C5299B']);
 
-          const ease = d.ease_by_area || [];
-          if (ease.length) {
-            new Chart(document.getElementById('chartEase'), {
-              type: 'bar',
-              data: {
-                labels: ease.map(e => e.area),
-                datasets: [{ label: '% Easy + Very Easy', data: ease.map(e => e.pct_easy), backgroundColor: '#4C4084' }]
-              },
-              options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                  x: { min: 0, max: 100, grid: { color: gridColor }, ticks: { color: tickColor, callback: v => v + '%' } },
-                  y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 } } }
-                }
-              }
-            });
-          }
-          const bar = d.barriers || [];
-          new Chart(document.getElementById('chartBarriers'), {
-            type: 'bar',
-            data: {
-              labels: bar.map(b => b.label),
-              datasets: [{ label: 'Mentions', data: bar.map(b => b.count), backgroundColor: '#C5299B' }]
-            },
-            options: {
-              indexAxis: 'y',
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false } },
-              scales: {
-                x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
-                y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 } } }
-              }
-            }
-          });
+    var role = d.role || {};
+    var roleKeys = Object.keys(role);
+    renderBarChart('chartRole', roleKeys, roleKeys.map(function(k) { return role[k]; }), chartColors);
 
-          const role = d.role || {};
-          createDoughnut('chartRole', Object.keys(role), Object.values(role), chartColors);
-          const roleCountsEl = document.getElementById('role-counts');
-          if (roleCountsEl && Object.keys(role).length) {
-            const total = Object.values(role).reduce((a, b) => a + b, 0);
-            roleCountsEl.innerHTML = 'Exact counts: ' + Object.entries(role).map(([name, count]) => `${name} <strong>${count}</strong>`).join(' · ') + ` (total ${total}).`;
-          }
+    var roleCountsEl = document.getElementById('role-counts');
+    if (roleCountsEl && roleKeys.length) {
+      var total = roleKeys.reduce(function(a, k) { return a + role[k]; }, 0);
+      roleCountsEl.innerHTML = 'Exact counts: ' + roleKeys.map(function(name) { return name + ' <strong>' + role[name] + '</strong>'; }).join(' · ') + ' (total ' + total + ').';
+    }
 
-          const ind = d.industry || {};
-          const indLabels = Object.keys(ind).filter(k => k !== 'Unknown');
-          const indCounts = indLabels.map(k => ind[k]);
-          createDoughnut('chartIndustry', indLabels, indCounts, chartColors);
-          createDoughnut('chartIndustry2', indLabels, indCounts, chartColors);
+    var ind = d.industry || {};
+    var indLabels = Object.keys(ind).filter(function(k) { return k !== 'Unknown'; });
+    var indCounts = indLabels.map(function(k) { return ind[k]; });
+    renderBarChart('chartIndustry', indLabels, indCounts, chartColors);
+    renderBarChart('chartIndustry2', indLabels, indCounts, chartColors);
 
-          const aiPriority = d.ai_priority_first || [];
-          if (aiPriority.length) {
-            new Chart(document.getElementById('chartAIPriority'), {
-              type: 'bar',
-              data: {
-                labels: aiPriority.map(p => wrapLabel(p.label, 42)),
-                datasets: [{ label: 'Responses', data: aiPriority.map(p => p.count), backgroundColor: chartColors }]
-              },
-              options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: { padding: { left: 8, right: 8 } },
-                plugins: { legend: { display: false } },
-                scales: {
-                  x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor } },
-                  y: { grid: { display: false }, ticks: { color: '#201547', font: { size: 10 }, autoSkip: false }
-                }
-              }
-            });
-          }
+    var aiPriority = d.ai_priority_first || [];
+    if (aiPriority.length) renderBarChart('chartAIPriority', aiPriority.map(function(p) { return p.label; }), aiPriority.map(function(p) { return p.count; }), chartColors);
 
-          const quotes = d.value_quotes || [];
-          const qContainer = document.getElementById('quotes-container');
-          if (quotes.length && qContainer) {
-            const isObj = typeof quotes[0] === 'object' && quotes[0].quote !== undefined;
-            const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-            qContainer.innerHTML = quotes.slice(0, 18).map(q => {
-              const text = isObj ? q.quote : q;
-              const att = isObj ? (q.role && q.industry && q.industry !== 'Unknown' ? `— ${q.role}, ${q.industry}` : q.role ? `— ${q.role}` : '') : '';
-              return `<blockquote>“${esc(text)}”${att ? `<div class="quote-attribution">${esc(att)}</div>` : ''}</blockquote>`;
-            }).join('');
-          }
-          } catch (err) {}
-        })
-        .catch(function() {});
-      }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() { setTimeout(runCharts, 150); });
-      } else {
-        setTimeout(runCharts, 150);
-      }
-    })();
+    var quotes = d.value_quotes || [];
+    var qContainer = document.getElementById('quotes-container');
+    if (quotes.length && qContainer) {
+      var isObj = typeof quotes[0] === 'object' && quotes[0].quote !== undefined;
+      var esc = function(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+      qContainer.innerHTML = quotes.slice(0, 18).map(function(q) {
+        var text = isObj ? q.quote : q;
+        var att = isObj ? (q.role && q.industry && q.industry !== 'Unknown' ? '— ' + q.role + ', ' + q.industry : q.role ? '— ' + q.role : '') : '';
+        return '<blockquote>"' + esc(text) + '"' + (att ? '<div class="quote-attribution">' + esc(att) + '</div>' : '') + '</blockquote>';
+      }).join('');
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+
   </script>
 </body>
 </html>
